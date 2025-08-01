@@ -1,18 +1,14 @@
-import{a as f,S as g,i as n}from"./assets/vendor-5YrzWRhu.js";(function(){const e=document.createElement("link").relList;if(e&&e.supports&&e.supports("modulepreload"))return;for(const r of document.querySelectorAll('link[rel="modulepreload"]'))s(r);new MutationObserver(r=>{for(const a of r)if(a.type==="childList")for(const i of a.addedNodes)i.tagName==="LINK"&&i.rel==="modulepreload"&&s(i)}).observe(document,{childList:!0,subtree:!0});function t(r){const a={};return r.integrity&&(a.integrity=r.integrity),r.referrerPolicy&&(a.referrerPolicy=r.referrerPolicy),r.crossOrigin==="use-credentials"?a.credentials="include":r.crossOrigin==="anonymous"?a.credentials="omit":a.credentials="same-origin",a}function s(r){if(r.ep)return;r.ep=!0;const a=t(r);fetch(r.href,a)}})();const p="51535484-ce6dacd6a97960c9e0e55a6bc",y="https://pixabay.com/api/";async function d(o){try{return(await f.get(y,{params:{key:p,q:o,image_type:"photo",orientation:"horizontal",safesearch:!0}})).data}catch(e){throw new Error("Failed to fetch images: "+e.message)}}function h(o){return o.map(e=>`
-      <li class="image-card">
-        <img src="${e.webformatURL}" alt="${e.tags}" />
+import{a as d,S as f,i as n}from"./assets/vendor-5YrzWRhu.js";(function(){const o=document.createElement("link").relList;if(o&&o.supports&&o.supports("modulepreload"))return;for(const t of document.querySelectorAll('link[rel="modulepreload"]'))s(t);new MutationObserver(t=>{for(const r of t)if(r.type==="childList")for(const i of r.addedNodes)i.tagName==="LINK"&&i.rel==="modulepreload"&&s(i)}).observe(document,{childList:!0,subtree:!0});function e(t){const r={};return t.integrity&&(r.integrity=t.integrity),t.referrerPolicy&&(r.referrerPolicy=t.referrerPolicy),t.crossOrigin==="use-credentials"?r.credentials="include":t.crossOrigin==="anonymous"?r.credentials="omit":r.credentials="same-origin",r}function s(t){if(t.ep)return;t.ep=!0;const r=e(t);fetch(t.href,r)}})();const m="51535484-ce6dacd6a97960c9e0e55a6bc",p="https://pixabay.com/api/";async function y(a){const o={key:m,q:a,image_type:"photo",orientation:"horizontal",safesearch:!0};try{return(await d.get(p,{params:o})).data}catch(e){throw new Error("Failed to fetch images: "+e.message)}}const l=document.querySelector(".gallery"),u=document.querySelector(".loader"),h=new f(".gallery a",{captionsData:"alt",captionDelay:250});function g(a){const o=a.map(e=>`
+      <li class="gallery-item">
+        <a href="${e.largeImageURL}">
+          <img src="${e.webformatURL}" alt="${e.tags}" loading="lazy" />
+        </a>
+        <div class="info">
+          <p><b>Likes:</b> ${e.likes}</p>
+          <p><b>Views:</b> ${e.views}</p>
+          <p><b>Comments:</b> ${e.comments}</p>
+          <p><b>Downloads:</b> ${e.downloads}</p>
+        </div>
       </li>
-    `).join("")}let c;function L(o){const e=document.querySelector(".gallery"),t=o.map(s=>`
-        <li class="gallery-item">
-          <a href="${s.largeImageURL}">
-            <img src="${s.webformatURL}" alt="${s.tags}" loading="lazy" />
-          </a>
-          <div class="info">
-            <p><b>Likes:</b> ${s.likes}</p>
-            <p><b>Views:</b> ${s.views}</p>
-            <p><b>Comments:</b> ${s.comments}</p>
-            <p><b>Downloads:</b> ${s.downloads}</p>
-          </div>
-        </li>
-      `).join("");e.insertAdjacentHTML("beforeend",t),c?c.refresh():c=new g(".gallery a")}function b(){document.querySelector(".gallery").innerHTML=""}const l=document.querySelector(".form"),u=document.querySelector("#gallery");l.addEventListener("submit",async o=>{o.preventDefault();const e=o.currentTarget.elements.query.value.trim();if(!e){n.warning({title:"Warning",message:"Please enter a search query",position:"topRight"});return}try{const t=await d(e);if(t.hits.length===0){n.info({title:"Info",message:"Sorry, there are no images matching your search query. Please try again!",position:"topRight"}),u.innerHTML="";return}const s=h(t.hits);u.innerHTML=s}catch(t){n.error({title:"Error",message:t.message,position:"topRight"})}});const m=document.querySelector(".loader");l.addEventListener("submit",async o=>{o.preventDefault();const e=o.currentTarget.elements.query.value.trim();if(!e){n.error({message:"Please enter a search query!",position:"topRight"});return}b(),w();try{const t=await d(e);t.hits.length===0?n.warning({message:"Sorry, there are no images matching your search query. Please try again!",position:"topRight"}):L(t.hits)}catch(t){n.error({message:t.message,position:"topRight"})}finally{q(),l.reset()}});function w(){m.classList.remove("hidden")}function q(){m.classList.add("hidden")}
+    `).join("");l.insertAdjacentHTML("beforeend",o),h.refresh()}function b(){l.innerHTML=""}function L(){u.classList.remove("hidden")}function w(){u.classList.add("hidden")}const c=document.querySelector(".form");c.addEventListener("submit",async a=>{a.preventDefault();const o=c.querySelector('input[name="search-text"]');if(!o){n.error({title:"Error",message:"Search input not found in the form."});return}const e=o.value.trim();if(!e){n.warning({title:"Warning",message:"Please enter a search query!"});return}b(),L();try{const s=await y(e);if(!s.hits||s.hits.length===0){n.info({title:"No Results",message:"Sorry, there are no images matching your search query. Please try again!"});return}g(s.hits)}catch{n.error({title:"Error",message:"Failed to fetch images. Please try again later."})}finally{w()}});
 //# sourceMappingURL=index.js.map
