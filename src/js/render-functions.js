@@ -35,9 +35,15 @@ export function clearGallery() {
 }
 
 export function showLoader() {
-  loader.classList.remove('hidden');
+  if (loader) {
+    loader.classList.remove('hidden');
+  } else {
+    console.error('Loader not found in DOM');
+  }
 }
 
 export function hideLoader() {
-  loader.classList.add('hidden');
+  if (loader) {
+    loader.classList.add('hidden');
+  }
 }
