@@ -1,50 +1,43 @@
-export function renderImageList(images) {
-  return images
-    .map(
-      image => `
-      <li class="image-card">
-        <img src="${image.webformatURL}" alt="${image.tags}" />
-      </li>
-    `
-    )
-    .join('');
-}
-
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
-let lightbox;
+const galleryContainer = document.querySelector('.gallery');
+const loader = document.querySelector('.loader');
 
-export function renderGallery(images) {
-  const gallery = document.querySelector('.gallery');
-  const markup = images
-    .map(image => {
-      return `
-        <li class="gallery-item">
-          <a href="${image.largeImageURL}">
-            <img src="${image.webformatURL}" alt="${image.tags}" loading="lazy" />
-          </a>
-          <div class="info">
-            <p><b>Likes:</b> ${image.likes}</p>
-            <p><b>Views:</b> ${image.views}</p>
-            <p><b>Comments:</b> ${image.comments}</p>
-            <p><b>Downloads:</b> ${image.downloads}</p>
-          </div>
-        </li>
-      `;
-    })
-    .join('');
+const lightbox = new SimpleLightbox('.gallery a', {
+  captionsData: 'alt',
+  captionDelay: 250,
+});
 
-  gallery.insertAdjacentHTML('beforeend', markup);
+export function createGallery(images) {
+  const markup = images.map(image => {
+    return `
+      <li class="gallery-item">
+        <a href="${image.largeImageURL}">
+          <img src="${image.webformatURL}" alt="${image.tags}" loading="lazy" />
+        </a>
+        <div class="info">
+          <p><b>Likes:</b> ${image.likes}</p>
+          <p><b>Views:</b> ${image.views}</p>
+          <p><b>Comments:</b> ${image.comments}</p>
+          <p><b>Downloads:</b> ${image.downloads}</p>
+        </div>
+      </li>
+    `;
+  }).join('');
 
-
-  if (!lightbox) {
-    lightbox = new SimpleLightbox('.gallery a');
-  } else {
-    lightbox.refresh();
-  }
+  galleryContainer.insertAdjacentHTML('beforeend', markup);
+  lightbox.refresh();
 }
 
 export function clearGallery() {
-  document.querySelector('.gallery').innerHTML = '';
+  galleryContainer.innerHTML = '';
+}
+
+export function showLoader() {
+  loader.classList.remove('hidden');
+}
+
+export function hideLoader() {
+  loader.classList.add('hidden');
 }

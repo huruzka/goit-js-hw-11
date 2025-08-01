@@ -1,62 +1,28 @@
-
-import { fetchImages } from './js/pixabay-api.js';
-import { renderImageList, renderGallery, clearGallery } from './js/render-functions.js';
+import { getImagesByQuery } from './js/pixabay-api.js';
+import { createGallery, clearGallery, showLoader, hideLoader } from './js/render-functions.js';
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 
 const form = document.querySelector('.form');
-const gallery = document.querySelector('#gallery');
 
 form.addEventListener('submit', async event => {
   event.preventDefault();
 
-  const searchQuery = event.currentTarget.elements.query.value.trim();
-
-  if (!searchQuery) {
-    iziToast.warning({
-      title: 'Warning',
-      message: 'Please enter a search query',
-      position: 'topRight',
+  const searchInput = form.querySelector('input[name="search-text"]');
+  if (!searchInput) {
+    iziToast.error({
+      title: 'Error',
+      message: 'Search input not found in the form.',
     });
     return;
   }
 
-  try {
-    const data = await fetchImages(searchQuery);
+  const query = searchInput.value.trim();
 
-    if (data.hits.length === 0) {
-      iziToast.info({
-        title: 'Info',
-        message: 'Sorry, there are no images matching your search query. Please try again!',
-        position: 'topRight',
-      });
-      gallery.innerHTML = ''; 
-      return;
-    }
-
-    const markup = renderImageList(data.hits);
-    gallery.innerHTML = markup;
-  } catch (error) {
-    iziToast.error({
-      title: 'Error',
-      message: error.message,
-      position: 'topRight',
-    });
-  }
-});
-
-const loader = document.querySelector('.loader');
-
-
-form.addEventListener('submit', async event => {
-  event.preventDefault();
-
-  const searchQuery = event.currentTarget.elements.query.value.trim();
-
-  if (!searchQuery) {
-    iziToast.error({
+  if (!query) {
+    iziToast.warning({
+      title: 'Warning',
       message: 'Please enter a search query!',
-      position: 'topRight',
     });
     return;
   }
@@ -65,32 +31,23 @@ form.addEventListener('submit', async event => {
   showLoader();
 
   try {
-    const data = await fetchImages(searchQuery);
+    const data = await getImagesByQuery(query);
 
-    if (data.hits.length === 0) {
-      iziToast.warning({
+    if (!data.hits || data.hits.length === 0) {
+      iziToast.info({
+        title: 'No Results',
         message: 'Sorry, there are no images matching your search query. Please try again!',
-        position: 'topRight',
       });
-    } else {
-      renderGallery(data.hits);
+      return;
     }
+
+    createGallery(data.hits);
   } catch (error) {
     iziToast.error({
-      message: error.message,
-      position: 'topRight',
+      title: 'Error',
+      message: 'Failed to fetch images. Please try again later.',
     });
   } finally {
     hideLoader();
-    form.reset();
   }
 });
-
-function showLoader() {
-  loader.classList.remove('hidden'); 
-}
-
-function hideLoader() {
-  loader.classList.add('hidden');
-}
-
