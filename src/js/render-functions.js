@@ -1,49 +1,49 @@
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
-const galleryContainer = document.querySelector('.gallery');
-const loader = document.querySelector('.loader');
+const gallery = document.querySelector('.gallery');
+let lightbox = new SimpleLightbox('.gallery a');
 
-const lightbox = new SimpleLightbox('.gallery a', {
-  captionsData: 'alt',
-  captionDelay: 250,
-});
-
-export function createGallery(images) {
-  const markup = images.map(image => {
-    return `
-      <li class="gallery-item">
-        <a href="${image.largeImageURL}">
-          <img src="${image.webformatURL}" alt="${image.tags}" loading="lazy" />
-        </a>
-        <div class="info">
-          <p><b>Likes:</b> ${image.likes}</p>
-          <p><b>Views:</b> ${image.views}</p>
-          <p><b>Comments:</b> ${image.comments}</p>
-          <p><b>Downloads:</b> ${image.downloads}</p>
-        </div>
-      </li>
-    `;
-  }).join('');
-
-  galleryContainer.insertAdjacentHTML('beforeend', markup);
-  lightbox.refresh();
-}
-
-export function clearGallery() {
-  galleryContainer.innerHTML = '';
+function getLoader() {
+  return document.querySelector('.loader');
 }
 
 export function showLoader() {
-  if (loader) {
-    loader.classList.remove('hidden');
-  } else {
-    console.error('Loader not found in DOM');
+  const loaderEl = getLoader();
+  if (loaderEl) {
+    loaderEl.classList.remove('hidden');
   }
 }
 
 export function hideLoader() {
-  if (loader) {
-    loader.classList.add('hidden');
+  const loaderEl = getLoader();
+  if (loaderEl) {
+    loaderEl.classList.add('hidden');
   }
 }
+export function clearGallery() {
+  gallery.innerHTML = '';
+}
+
+export function createGallery(images) {
+  const markup = images
+    .map(
+      image => `
+      <li class="gallery-item">
+        <a href="${image.largeImageURL}">
+          <img src="${image.webformatURL}" alt="${image.tags}" />
+        </a>
+        <div class="info">
+          <p>Likes: ${image.likes}</p>
+          <p>Views: ${image.views}</p>
+          <p>Comments: ${image.comments}</p>
+          <p>Downloads: ${image.downloads}</p>
+        </div>
+      </li>`
+    )
+    .join('');
+
+  gallery.insertAdjacentHTML('beforeend', markup);
+  lightbox.refresh();
+}
+

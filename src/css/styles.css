@@ -61,23 +61,25 @@ button{
   animation: spin 1s linear infinite;
   margin: 30px auto;
   display: none;
-  /* приховано за замовчуванням */
 }
 
-.loader.show {
+.loader:not(.hidden) {
   display: block;
-  /* показати, коли потрібен */
 }
 
- @keyframes spin {
-   0% {
-     transform: rotate(0deg);
-   }
+.hidden {
+  display: none !important;
+}
 
-   100% {
-     transform: rotate(360deg);
-   }
- }
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
 ul{
   display: flex;
  
